@@ -16,7 +16,7 @@ It demonstrates **traditional test automation skills** using **Java, JUnit, and 
 * Tests include verifying home page title, security center, navigation links, footer links, login validation, and UI elements.
 * Uses **JUnit 5** as the test framework.
 * Built with **Maven** for dependency management and test execution.
-* Generates **JUnit XML reports** for GitHub Actions and test reporting.
+* Generates **JUnit HTML reports** automatically using GitHub Actions and Surefire.
 
 ---
 
@@ -26,8 +26,9 @@ It demonstrates **traditional test automation skills** using **Java, JUnit, and 
 * [Java 25 (Adoptium)](https://adoptium.net/) for test scripting  
 * [JUnit 5](https://junit.org/junit5/) as the test runner  
 * [Maven](https://maven.apache.org/) for build and dependency management  
-* [GitHub Actions](https://docs.github.com/en/actions) for CI/CD  
+* [GitHub Actions](https://docs.github.com/en/actions) for CI/CD and report publishing  
 
 ---
 
+## 📂 Project Structure
 
