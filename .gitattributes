@@ -1,0 +1,8 @@
+# Exclude Maven build outputs and generated site/report files from language stats
+/target/** linguist-vendored
+/target/site/** linguist-vendored
+/target/surefire-reports/** linguist-vendored
+
+# If you have other auto-generated docs folders, add them here:
+# docs/** linguist-vendored
+# reports/** linguist-vendored
