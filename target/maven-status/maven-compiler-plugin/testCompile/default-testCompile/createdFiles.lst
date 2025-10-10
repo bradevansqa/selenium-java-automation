@@ -1,2 +1,10 @@
-tests\BaseTest.class
-tests\SecurityCenterTests.class
+base\BaseTest.class
+tests\VerifyLoginModalOpensTest.class
+tests\VerifyCartButtonClickableTest.class
+tests\VerifyInvalidLoginTest.class
+tests\VerifySignupModalOpensTest.class
+tests\VerifyAddToCartTest.class
+tests\VerifyRemoveItemFromCartTest.class
+tests\VerifyHomePageTitleTest.class
+tests\VerifyPlaceOrderVisibleTest.class
+tests\VerifyNavigationToCartFromProductTest.class

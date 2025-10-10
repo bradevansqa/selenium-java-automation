@@ -1,2 +1,10 @@
-C:\Users\brade\selenium-java-automation\src\test\java\tests\BaseTest.java
-C:\Users\brade\selenium-java-automation\src\test\java\tests\SecurityCenterTests.java
+C:\Users\brade\selenium-java-automation\src\test\java\base\BaseTest.java
+C:\Users\brade\selenium-java-automation\src\test\java\tests\VerifyAddToCartTest.java
+C:\Users\brade\selenium-java-automation\src\test\java\tests\VerifyCartButtonClickableTest.java
+C:\Users\brade\selenium-java-automation\src\test\java\tests\VerifyHomePageTitleTest.java
+C:\Users\brade\selenium-java-automation\src\test\java\tests\VerifyInvalidLoginTest.java
+C:\Users\brade\selenium-java-automation\src\test\java\tests\VerifyLoginModalOpensTest.java
+C:\Users\brade\selenium-java-automation\src\test\java\tests\VerifyNavigationToCartFromProductTest.java
+C:\Users\brade\selenium-java-automation\src\test\java\tests\VerifyPlaceOrderVisibleTest.java
+C:\Users\brade\selenium-java-automation\src\test\java\tests\VerifyRemoveItemFromCartTest.java
+C:\Users\brade\selenium-java-automation\src\test\java\tests\VerifySignupModalOpensTest.java
