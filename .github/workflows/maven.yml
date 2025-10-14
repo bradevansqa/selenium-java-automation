@@ -13,7 +13,7 @@ jobs:
       # 1️⃣ Checkout your repo
       - uses: actions/checkout@v3
 
-      # 2️⃣ Set up JDK 17 (matches your local)
+      # 2️⃣ Set up JDK 17
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
@@ -26,8 +26,18 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y google-chrome-stable
 
-      # 4️⃣ Run Maven tests
+      # 4️⃣ Install ChromeDriver (matching version)
+      - name: Install ChromeDriver
+        run: |
+          CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | cut -d. -f1)
+          LATEST_DRIVER=$(curl -s "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION")
+          wget -N "https://chromedriver.storage.googleapis.com/$LATEST_DRIVER/chromedriver_linux64.zip" -P /tmp
+          unzip -o /tmp/chromedriver_linux64.zip -d /tmp
+          sudo mv /tmp/chromedriver /usr/local/bin/
+          sudo chmod +x /usr/local/bin/chromedriver
+
+      # 5️⃣ Run Maven tests
       - name: Run Selenium Tests
         env:
-          CI: true  # used in BaseTest for headless mode
+          CI: true
         run: mvn clean test
