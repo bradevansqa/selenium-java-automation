@@ -10,13 +10,16 @@
 
 ## Overview
 
-This repository contains **Selenium WebDriver** end-to-end tests for the [Bank of America](https://www.bankofamerica.com/) website.  
-It demonstrates **traditional test automation skills** using **Java, JUnit, and Maven**.
+This repository contains **Selenium WebDriver** end-to-end tests for the [Demoblaze](https://www.demoblaze.com/) demo website.  
+It demonstrates **professional test automation skills** using **Java, JUnit, and Maven**.
 
-* Tests include verifying home page title, security center, navigation links, footer links, login validation, and UI elements.
+### ✅ Key Features
+
+* Verifies home page title, navigation, cart functionality, login validation, and UI elements.
 * Uses **JUnit 5** as the test framework.
-* Built with **Maven** for dependency management and test execution.
-* Generates **JUnit HTML reports** automatically using GitHub Actions and Surefire.
+* Runs tests with **Maven** for dependency management and execution.
+* Generates **JUnit HTML reports** automatically via **GitHub Actions**.
+* Fully CI/CD-ready with tests running on **GitHub Ubuntu runners**.
 
 ---
 
