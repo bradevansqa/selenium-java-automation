@@ -1,44 +1,55 @@
-name: Run Maven Tests and Deploy Reports
+name: Maven Tests and Deploy Reports
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
   pull_request:
-    branches:
-      - main
 
 jobs:
   test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      # Checkout your repo
+      - uses: actions/checkout@v4
 
-      - name: Set up JDK 17
+      # Set up JDK 17
+      - name: Set up JDK
         uses: actions/setup-java@v4
         with:
-          distribution: temurin
           java-version: 17
+          distribution: temurin
 
-      - name: Install Chrome
+      # Install Chrome & ChromeDriver
+      - name: Install Chrome and ChromeDriver
         run: |
           sudo apt-get update
-          sudo apt-get install -y google-chrome-stable
+          sudo apt-get install -y google-chrome-stable chromium-chromedriver
 
-      - name: Run Maven tests
+      # Run tests
+      - name: Run Selenium Tests
         run: mvn clean test
 
-      - name: Generate Surefire HTML report
-        run: mvn surefire-report:report -Daggregate=true
+      # Generate Surefire HTML report
+      - name: Generate Test Report
+        run: mvn surefire-report:report-only
 
-      - name: Verify report folder
-        run: ls -R target/site || echo "No report folder found"
+      # Create folder for deployment
+      - name: Prepare report for deployment
+        run: |
+          mkdir -p public
+          cp -r target/site/* public/
 
+      # Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
-        if: success()
         uses: peaceiris/actions-gh-pages@v3.9.3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./target/site
+          publish_dir: ./public
+          publish_branch: gh-pages
+
+      # Print report URL in job summary
+      - name: 📢 Print Report URL
+        run: |
+          echo "✅ Test report published!"
+          echo "🌐 View it here: https://bradevansqa.github.io/selenium-java-automation/" >> $GITHUB_STEP_SUMMARY
