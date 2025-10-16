@@ -1,63 +1,66 @@
-name: Selenium Tests
+name: Maven Tests & Deploy Reports
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
+    branches:
+      - main
+  workflow_dispatch:
 
 jobs:
-  build:
+  build-and-test:
+    name: Build, Test, and Generate Reports
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Checkout code
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-      # 2️⃣ Setup Java
-      - name: Set up JDK
-        uses: actions/setup-java@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
         with:
           distribution: temurin
           java-version: 17
 
-      # 3️⃣ Install Chrome
-      - name: Install Chrome
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y google-chrome-stable
-
-      # 4️⃣ Run Selenium tests and generate HTML report
-      - name: Run Maven tests
-        run: |
-          mvn clean verify site -B
-
-      # 5️⃣ Upload report artifact (only once)
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Cache Maven packages
+        uses: actions/cache@v3
         with:
-          path: ./target/site
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-maven-
 
-  deploy:
+      - name: Build with Maven
+        run: mvn clean compile
+
+      - name: Run Selenium Tests
+        run: mvn test
+
+      - name: Generate Maven Site Report
+        run: mvn site
+
+      - name: Verify Reports Exist
+        run: |
+          echo "Contents of target/site directory:"
+          ls -R target/site || echo "target/site not found"
+
+  deploy-reports:
+    name: Deploy Reports to GitHub Pages
     runs-on: ubuntu-latest
-    needs: build
-    permissions:
-      pages: write
-      id-token: write
-
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+    needs: build-and-test
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Upload site artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          path: target/site
+
       - name: Deploy to GitHub Pages
-        id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          artifact_name: github-pages
+
+      - name: Show Deployment URL
+        run: |
+          echo '🌐 Reports should be visible at: https://bradevansqa.github.io/selenium-java-automation/'
