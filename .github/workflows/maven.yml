@@ -1,59 +1,63 @@
-name: Maven Tests and Deploy Reports
+name: Selenium Tests
 
 on:
   push:
     branches: [ main ]
   pull_request:
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Checkout repo
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      # 1️⃣ Checkout code
+      - uses: actions/checkout@v4
 
-      # 2️⃣ Set up JDK
-      - name: Set up JDK 17
+      # 2️⃣ Setup Java
+      - name: Set up JDK
         uses: actions/setup-java@v4
         with:
-          java-version: 17
           distribution: temurin
+          java-version: 17
 
-      # 3️⃣ Install Chrome and ChromeDriver
-      - name: Install Chrome and ChromeDriver
+      # 3️⃣ Install Chrome
+      - name: Install Chrome
         run: |
           sudo apt-get update
-          sudo apt-get install -y google-chrome-stable chromium-chromedriver
+          sudo apt-get install -y google-chrome-stable
 
-      # 4️⃣ Run Maven tests
-      - name: Run Selenium Tests
-        run: mvn clean test
-
-      # 5️⃣ Generate Surefire Report
-      - name: Generate Surefire Report
-        run: mvn surefire-report:report
-
-      # 6️⃣ Verify report exists (optional)
-      - name: List target/site
-        run: ls -R target/site || echo "target/site not found"
-
-      # 7️⃣ Prepare report for deployment
-      - name: Prepare report for deployment
+      # 4️⃣ Run Selenium tests and generate HTML report
+      - name: Run Maven tests
         run: |
-          mkdir -p public
-          cp -r target/site/* public/
+          mvn clean verify site -B
 
-      # 8️⃣ Deploy to GitHub Pages
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3.9.3
+      # 5️⃣ Upload report artifact (only once)
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
-          publish_branch: gh-pages
+          path: ./target/site
 
-      # 9️⃣ Add summary link to workflow run
-      - name: Add Report Link to Summary
-        run: |
-          echo "🌐 Report: https://bradevansqa.github.io/selenium-java-automation/" >> $GITHUB_STEP_SUMMARY
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    permissions:
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
